@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 
 using Photon.Pun;
 using Photon.Realtime;
-
+using Photon.Pun.Demo.PunBasics;
+using System.Collections.Generic;
 
 namespace Com.MyCompany.MyGame
 {
@@ -30,6 +31,8 @@ namespace Com.MyCompany.MyGame
 
         [Tooltip("The prefab to use for representing the player")]
         public GameObject playerPrefab;
+
+        public List<Player> playerList = new List<Player>();
 
         #region Photon Callbacks
 
@@ -54,8 +57,15 @@ namespace Com.MyCompany.MyGame
             else
             {
                 Debug.LogFormat("We are Instantiating LocalPlayer from {0}", Application.loadedLevelName);
-                // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
-                PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                if (PlayerManager.LocalPlayerInstance == null)
+                {
+                    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+                    PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f, 5f, 0f), Quaternion.identity, 0);
+                }
+                else
+                {
+                    Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
+                }
             }
         }
 
@@ -97,7 +107,7 @@ namespace Com.MyCompany.MyGame
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
+                playerList.Add(other);
 
                 LoadArena();
             }
@@ -112,7 +122,7 @@ namespace Com.MyCompany.MyGame
             if (PhotonNetwork.IsMasterClient)
             {
                 Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-
+                playerList.Remove(other);
 
                 LoadArena();
             }
