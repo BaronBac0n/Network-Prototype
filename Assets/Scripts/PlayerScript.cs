@@ -25,7 +25,7 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
-            Debug.LogError("The Username Display is not tagged correctly");
+            //Debug.LogError("The Username Display is not tagged correctly");
         }
     }
 

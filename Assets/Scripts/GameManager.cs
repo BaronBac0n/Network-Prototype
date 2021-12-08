@@ -31,7 +31,7 @@ namespace Com.MyCompany.MyGame
 
         [Tooltip("The prefab to use for representing the player")]
         public GameObject playerPrefab;
-
+        
         public List<Player> playerList = new List<Player>();
 
         #region Photon Callbacks
